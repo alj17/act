@@ -1,0 +1,23 @@
+FROM ubuntu:18.04 AS builder
+
+ENV VLSI_TOOLS_SRC=/src
+ENV ACT_HOME=/install
+WORKDIR ${VLSI_TOOLS_SRC}
+
+ADD . /src
+
+RUN \
+	apt-get -q update -y && \
+	apt-get -q install -y libedit-dev zlib1g-dev m4 build-essential && \
+	mkdir ${ACT_HOME} && \
+	./configure $ACT_HOME && \
+	./build $ACT_HOME && \
+	make install && \
+	make runtest
+
+FROM ubuntu:18.04
+ENV  ACT_HOME=/etc/act
+RUN apt-get update -y && apt-get install libedit2 && mkdir -p /etc/act/conf
+COPY --from=builder /install/bin /usr/bin
+COPY --from=builder /install/conf /etc/act/conf
+
