@@ -55,7 +55,7 @@ $(LIB): $(OBJS)
 
 docs: 
 	doxygen
-	(cd doc; gen)
+	(cd doc; ./gen)
 
 act.cy: act.m4 defs.m4 expr.m4 lang.m4 namespaces.m4 types.m4 expr.c expr.h
 	m4 -s act.m4 > act.cy
